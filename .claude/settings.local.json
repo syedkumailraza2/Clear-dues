@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter pub get:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(flutter build:*)",
+      "Bash(flutter run:*)",
+      "Bash(flutter doctor:*)",
+      "Bash(flutter clean:*)",
+      "Bash(dart run build_runner:*)",
+      "Skill(superpowers:writing-plans)",
+      "Skill(superpowers:brainstorming)",
+      "Bash(tree:*)",
+      "Bash(flutter create:*)"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "cleardues-backend",
+  "version": "1.0.0",
+  "description": "Clear Dues - Expense Management & UPI Settlement API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:prod": "NODE_ENV=production node server.js",
+    "dev": "nodemon server.js",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "check-env": "node -e \"require('dotenv').config(); console.log('Environment:', process.env.NODE_ENV || 'development'); console.log('MongoDB:', process.env.MONGODB_URI ? 'Configured' : 'Using default'); console.log('JWT Secret:', process.env.JWT_SECRET === 'your-super-secret-key-change-in-production' ? 'WARNING: Using default!' : 'Configured');\"",
+    "gen-secret": "node -e \"console.log('JWT_SECRET=' + require('crypto').randomBytes(64).toString('hex'))\""
+  },
+  "keywords": [
+    "expense",
+    "split",
+    "upi",
+    "settlement",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
