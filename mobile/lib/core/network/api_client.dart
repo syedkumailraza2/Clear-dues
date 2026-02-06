@@ -1,4 +1,7 @@
+import 'dart:developer' as developer;
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../constants/api_constants.dart';
@@ -29,6 +32,21 @@ class ApiClient {
         onError: _onError,
       ),
     );
+
+    _log('🌐 API Client initialized with baseUrl: ${ApiConstants.baseUrl}');
+  }
+
+  void _log(String message, {Object? error, StackTrace? stackTrace}) {
+    if (kDebugMode) {
+      developer.log(
+        message,
+        name: 'API',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      // Also print to console for easier viewing
+      debugPrint('[API] $message');
+    }
   }
 
   Future<void> _onRequest(
@@ -40,6 +58,21 @@ class ApiClient {
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
     }
+
+    // Log request
+    _log('➡️  ${options.method} ${options.uri}');
+    if (options.data != null) {
+      // Hide sensitive data
+      final logData = Map<String, dynamic>.from(options.data as Map);
+      if (logData.containsKey('password')) {
+        logData['password'] = '***';
+      }
+      _log('   📦 Body: $logData');
+    }
+    if (options.queryParameters.isNotEmpty) {
+      _log('   🔍 Query: ${options.queryParameters}');
+    }
+
     handler.next(options);
   }
 
@@ -47,6 +80,21 @@ class ApiClient {
     Response response,
     ResponseInterceptorHandler handler,
   ) {
+    final statusCode = response.statusCode ?? 0;
+    final icon = statusCode >= 200 && statusCode < 300 ? '✅' : '⚠️';
+
+    _log('$icon ${response.requestOptions.method} ${response.requestOptions.uri} → $statusCode');
+
+    // Log response data (truncate if too long)
+    if (response.data != null) {
+      final dataStr = response.data.toString();
+      if (dataStr.length > 500) {
+        _log('   📥 Response: ${dataStr.substring(0, 500)}...');
+      } else {
+        _log('   📥 Response: $dataStr');
+      }
+    }
+
     handler.next(response);
   }
 
@@ -54,6 +102,17 @@ class ApiClient {
     DioException error,
     ErrorInterceptorHandler handler,
   ) {
+    _log(
+      '❌ ${error.requestOptions.method} ${error.requestOptions.uri} → ${error.response?.statusCode ?? 'NO RESPONSE'}',
+      error: error,
+    );
+    _log('   ⚠️ Error Type: ${error.type}');
+    _log('   💬 Message: ${error.message}');
+
+    if (error.response?.data != null) {
+      _log('   📥 Error Response: ${error.response?.data}');
+    }
+
     handler.next(error);
   }
 

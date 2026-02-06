@@ -41,6 +41,33 @@ app.use(cors({
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
+// Request logging middleware (after body parser so we can log body)
+app.use((req, res, next) => {
+  const start = Date.now();
+  const timestamp = new Date().toISOString();
+
+  // Log incoming request
+  console.log(`\n[${timestamp}] ➡️  ${req.method} ${req.originalUrl}`);
+  console.log(`[${timestamp}]    IP: ${req.ip || req.connection.remoteAddress}`);
+
+  if (req.method !== 'GET' && Object.keys(req.body || {}).length > 0) {
+    // Hide sensitive fields
+    const safeBody = { ...req.body };
+    if (safeBody.password) safeBody.password = '***';
+    console.log(`[${timestamp}]    Body:`, JSON.stringify(safeBody));
+  }
+
+  // Log response when finished
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    const status = res.statusCode;
+    const icon = status >= 500 ? '❌' : status >= 400 ? '⚠️' : '✅';
+    console.log(`[${timestamp}] ${icon} ${req.method} ${req.originalUrl} → ${status} (${duration}ms)`);
+  });
+
+  next();
+});
+
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
