@@ -76,14 +76,19 @@ groupSchema.virtual('memberCount').get(function () {
 groupSchema.set('toJSON', { virtuals: true });
 groupSchema.set('toObject', { virtuals: true });
 
-// Check if user is a member
+// Check if user is a member (handles both populated and non-populated)
 groupSchema.methods.isMember = function (userId) {
-  return this.members.some((member) => member.toString() === userId.toString());
+  return this.members.some((member) => {
+    // Handle populated member (object with _id) or unpopulated (just ObjectId)
+    const memberId = member._id ? member._id.toString() : member.toString();
+    return memberId === userId.toString();
+  });
 };
 
-// Check if user is admin (creator)
+// Check if user is admin (creator) - handles both populated and non-populated
 groupSchema.methods.isAdmin = function (userId) {
-  return this.createdBy.toString() === userId.toString();
+  const creatorId = this.createdBy._id ? this.createdBy._id.toString() : this.createdBy.toString();
+  return creatorId === userId.toString();
 };
 
 module.exports = mongoose.model('Group', groupSchema);
