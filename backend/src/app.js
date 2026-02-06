@@ -43,6 +43,14 @@ app.use(cors({
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to the Clear Dues API',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.status(200).json({
