@@ -31,11 +31,9 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// CORS
+// CORS - Allow all origins for mobile app
 app.use(cors({
-  origin: config.nodeEnv === 'production'
-    ? process.env.ALLOWED_ORIGINS?.split(',')
-    : '*',
+  origin: '*',
   credentials: true,
 }));
 

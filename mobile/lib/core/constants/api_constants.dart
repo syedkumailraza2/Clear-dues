@@ -1,30 +1,12 @@
 class ApiConstants {
   ApiConstants._();
 
-  // Environment Configuration
-  // Set this based on build variant or use --dart-define
-  static const bool _isProduction = bool.fromEnvironment(
-    'PRODUCTION',
-    defaultValue: false,
-  );
-
-  // Base URLs for different environments
-  static const String _devBaseUrl = String.fromEnvironment(
+  // Base URL - Production by default
+  // Use --dart-define=API_URL=http://10.0.2.2:3000/api for local development
+  static const String baseUrl = String.fromEnvironment(
     'API_URL',
-    defaultValue: 'http://10.0.2.2:3000/api', // Android emulator -> host machine
+    defaultValue: 'https://clear-dues-chi.vercel.app/api',
   );
-  static const String _prodBaseUrl = String.fromEnvironment(
-    'API_URL',
-    defaultValue: 'https://api.cleardues.com/api', // Production URL
-  );
-
-  // Active base URL based on environment
-  static String get baseUrl => _isProduction ? _prodBaseUrl : _devBaseUrl;
-
-  // Alternative URLs for development:
-  // - Android Emulator: http://10.0.2.2:3000/api
-  // - iOS Simulator:    http://localhost:3000/api
-  // - Physical Device:  http://<your-ip>:3000/api
 
   // Auth endpoints
   static const String login = '/auth/login';

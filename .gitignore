@@ -1,0 +1,18 @@
+# Claude Code
+.claude/
+
+# PRD/Design documents (local only)
+clear_dues_prd_design_document.md
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
